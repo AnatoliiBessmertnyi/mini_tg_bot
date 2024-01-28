@@ -4,6 +4,8 @@ import time
 
 API_URL = 'https://api.telegram.org/bot'
 API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
+API_DOGS_URL = 'https://random.dog/woof.json'
+API_FOX_URL = 'https://randomfox.ca/floof/'
 BOT_TOKEN = '6777882636:AAEwT4UsxcuKIEIUG8B3E2-nji4-OH3ncAI'
 ERROR_TEXT = 'Здесь должна была быть картинка с котиком :('
 MAX_COUNTER = 100
