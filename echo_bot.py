@@ -28,8 +28,12 @@ async def process_help_command(message: Message):
 # кроме команд "/start" и "/help"
 @dp.message()
 async def send_echo(message: Message):
-    if message.text is not None:
-        await message.reply(text=message.text)
+    try:
+        await message.send_copy(chat_id=message.chat.id)
+    except TypeError:
+        await message.reply(
+            text='Данный тип апдейтов не поддерживается методом send copy'
+        )
 
 
 if __name__ == '__main__':
