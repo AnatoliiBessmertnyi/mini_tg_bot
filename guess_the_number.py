@@ -120,6 +120,7 @@ async def process_negative_answer(message: Message):
 @dp.message(lambda x: x.text and x.text.isdigit() and 1 <= int(x.text) <= 100)
 async def process_numbers_answer(message: Message):
     if users[message.from_user.id]['in_game']:
+        print(message.from_user.id)
         if int(message.text) == users[message.from_user.id]['secret_number']:
             users[message.from_user.id]['in_game'] = False
             users[message.from_user.id]['total_games'] += 1
