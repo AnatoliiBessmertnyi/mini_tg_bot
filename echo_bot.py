@@ -1,8 +1,14 @@
+import os
+
 from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
+from dotenv import find_dotenv, load_dotenv
 
-BOT_TOKEN = '6777882636:AAEwT4UsxcuKIEIUG8B3E2-nji4-OH3ncAI'
+
+env_file = find_dotenv('.env')
+load_dotenv(env_file)
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 # Создаем объекты бота и диспетчера
 bot = Bot(token=BOT_TOKEN)

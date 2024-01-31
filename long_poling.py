@@ -1,9 +1,16 @@
+import os
 import requests
 import time
 
+from dotenv import find_dotenv, load_dotenv
 
 API_URL = 'https://api.telegram.org/bot'
-BOT_TOKEN = '6777882636:AAEwT4UsxcuKIEIUG8B3E2-nji4-OH3ncAI'
+
+
+env_file = find_dotenv('.env')
+load_dotenv(env_file)
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+
 offset = -2
 timeout = 0
 updates: dict
