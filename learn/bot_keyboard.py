@@ -1,8 +1,11 @@
 from aiogram import Bot, Dispatcher
-from aiogram.filters import CommandStart
-from aiogram.types import KeyboardButton, Message
-from environs import Env
+from aiogram.filters import Command, CommandStart
+from aiogram.types import (
+    ReplyKeyboardMarkup, KeyboardButton, KeyboardButtonPollType, Message
+)
+from aiogram.types.web_app_info import WebAppInfo
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
+from environs import Env
 
 
 env = Env()
@@ -17,27 +20,58 @@ dp = Dispatcher()
 # Инициализируем билдер
 kb_builder = ReplyKeyboardBuilder()
 
-# Создаем первый список с кнопками
-buttons_1: list[KeyboardButton] = [
-    KeyboardButton(text=f'Кнопка {i + 1}') for i in range(10)
-]
+# Создаем кнопки
+contact_btn = KeyboardButton(
+    text='Отправить телефон',
+    request_contact=True
+)
+geo_btn = KeyboardButton(
+    text='Отправить геолокацию',
+    request_location=True
+)
+poll_btn = KeyboardButton(
+    text='Создать опрос/викторину',
+    request_poll=KeyboardButtonPollType()
+)
 
-# Распаковываем список с кнопками методом add
-kb_builder.add(*buttons_1)
+# Добавляем кнопки в билдер
+kb_builder.row(contact_btn, geo_btn, poll_btn, width=1)
 
-# Явно сообщаем билдеру сколько хотим видеть кнопок в 1-м и 2-м рядах
-kb_builder.adjust(2, 1, repeat=True)
+# Создаем объект клавиатуры
+keyboard: ReplyKeyboardMarkup = kb_builder.as_markup(
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
 
 
 # Этот хэндлер будет срабатывать на команду "/start"
-# и отправлять в чат клавиатуру
 @dp.message(CommandStart())
 async def process_start_command(message: Message):
     await message.answer(
-        text='Вот такая получается клавиатура',
-        reply_markup=kb_builder.as_markup(resize_keyboard=True)
+        text='Экспериментируем со специальными кнопками',
+        reply_markup=keyboard
     )
 
+
+# Создаем кнопку
+web_app_btn = KeyboardButton(
+    text='Start Web App',
+    web_app=WebAppInfo(url="https://stepik.org/")
+)
+# Создаем объект клавиатуры
+web_app_keyboard = ReplyKeyboardMarkup(
+    keyboard=[[web_app_btn]],
+    resize_keyboard=True
+)
+
+
+# Этот хэндлер будет срабатывать на команду "/web_app"
+@dp.message(Command(commands='web_app'))
+async def process_web_app_command(message: Message):
+    await message.answer(
+        text='Экспериментируем со специальными кнопками',
+        reply_markup=web_app_keyboard
+    )
 
 if __name__ == '__main__':
     dp.run_polling(bot)
