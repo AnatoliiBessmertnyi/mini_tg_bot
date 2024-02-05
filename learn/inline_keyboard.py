@@ -1,52 +1,71 @@
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message, CallbackQuery
 from environs import Env
+import logging
 
+logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 env = Env()
 env.read_env()
 
 BOT_TOKEN = env('BOT_TOKEN')
 
-# Создаем объекты бота и диспетчера
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
 # Создаем объекты инлайн-кнопок
-group_name = 'aiogram_stepik_course'
-url_button_1 = InlineKeyboardButton(
-    text='Группа "Телеграм-боты на AIOgram"',
-    url=f'tg://resolve?domain={group_name}'
-)
-user_id = env('ADMIN_IDS')
-url_button_2 = InlineKeyboardButton(
-    text='Автор курса на Степике по телеграм-ботам',
-    url=f'tg://user?id={user_id}'
+big_button_1 = InlineKeyboardButton(
+    text='БОЛЬШАЯ КНОПКА 1',
+    callback_data='big_button_1_pressed'
 )
 
-channel_name = 'toBeAnMLspecialist'
-url_button_3 = InlineKeyboardButton(
-    text='Канал "Стать специалистом по машинному обучению"',
-    url=f'https://t.me/{channel_name}'
+big_button_2 = InlineKeyboardButton(
+    text='БОЛЬШАЯ КНОПКА 2',
+    callback_data='big_button_2_pressed'
 )
 
 # Создаем объект инлайн-клавиатуры
 keyboard = InlineKeyboardMarkup(
-    inline_keyboard=[[url_button_1],
-                     [url_button_2],
-                     [url_button_3]]
+    inline_keyboard=[[big_button_1],
+                     [big_button_2]]
 )
 
 
 # Этот хэндлер будет срабатывать на команду "/start"
-# и отправлять в чат клавиатуру c url-кнопками
+# и отправлять в чат клавиатуру с инлайн-кнопками
 @dp.message(CommandStart())
 async def process_start_command(message: Message):
     await message.answer(
-        text='Это инлайн-кнопки с параметром "url"',
+        text='Это инлайн-кнопки. Нажми на любую!',
         reply_markup=keyboard
     )
+
+
+# Этот хэндлер будет срабатывать на апдейт типа CallbackQuery
+# с data 'big_button_1_pressed'
+@dp.callback_query(F.data == 'big_button_1_pressed')
+async def process_button_1_press(callback: CallbackQuery):
+    if callback.message.text != 'Была нажата БОЛЬШАЯ КНОПКА 1':
+        await callback.message.edit_text(
+            text='Была нажата БОЛЬШАЯ КНОПКА 1',
+            reply_markup=callback.message.reply_markup
+        )
+    await callback.answer()
+
+
+# Этот хэндлер будет срабатывать на апдейт типа CallbackQuery
+# с data 'big_button_2_pressed'
+@dp.callback_query(F.data == 'big_button_2_pressed')
+async def process_button_2_press(callback: CallbackQuery):
+    if callback.message.text != 'Была нажата БОЛЬШАЯ КНОПКА 2':
+        await callback.message.edit_text(
+            text='Была нажата БОЛЬШАЯ КНОПКА 2',
+            reply_markup=callback.message.reply_markup
+        )
+    await callback.answer()
 
 
 if __name__ == '__main__':
