@@ -53,7 +53,10 @@ async def process_button_1_press(callback: CallbackQuery):
             text='Была нажата БОЛЬШАЯ КНОПКА 1',
             reply_markup=callback.message.reply_markup
         )
-    await callback.answer()
+    await callback.answer(
+        text='Ура! Нажата кнопка 1',
+        show_alert=True
+    )
 
 
 # Этот хэндлер будет срабатывать на апдейт типа CallbackQuery
@@ -65,7 +68,7 @@ async def process_button_2_press(callback: CallbackQuery):
             text='Была нажата БОЛЬШАЯ КНОПКА 2',
             reply_markup=callback.message.reply_markup
         )
-    await callback.answer()
+    await callback.answer(text='Ура! Нажата кнопка 2')
 
 
 if __name__ == '__main__':
