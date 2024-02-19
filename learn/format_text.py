@@ -6,7 +6,7 @@ from environs import Env
 env = Env()
 env.read_env()
 BOT_TOKEN = env('BOT_TOKEN')
-bot = Bot(BOT_TOKEN)
+bot = Bot(BOT_TOKEN, parse_mode='HTML')
 dp = Dispatcher()
 
 
@@ -15,12 +15,12 @@ dp = Dispatcher()
 async def process_start_command(message: Message):
     await message.answer(
         text='Привет!\n\nЯ бот, демонстрирующий '
-             'как работает разметка. Отправь команду '
+             'как работает HTML-разметка. Отправь команду '
              'из списка ниже:\n\n'
-             '/html - пример разметки с помощью HTML\n'
-             '/markdownv2 - пример разметки с помощью MarkdownV2\n'
-             '/noformat - пример с разметкой, но без указания '
-             'параметра parse_mode'
+             '/bold - жирный текст\n'
+             '/italic - наклонный текст\n'
+             '/underline - подчеркнутый текст\n'
+             '/spoiler - спойлер'
     )
 
 
@@ -29,60 +29,60 @@ async def process_start_command(message: Message):
 async def process_help_command(message: Message):
     await message.answer(
         text='Я бот, демонстрирующий '
-             'как работает разметка. Отправь команду '
+             'как работает HTML-разметка. Отправь команду '
              'из списка ниже:\n\n'
-             '/html - пример разметки с помощью HTML\n'
-             '/markdownv2 - пример разметки с помощью MarkdownV2\n'
-             '/noformat - пример с разметкой, но без указания '
-             'параметра parse_mode'
+             '/bold - жирный текст\n'
+             '/italic - наклонный текст\n'
+             '/underline - подчеркнутый текст\n'
+             '/spoiler - спойлер'
     )
 
 
-# Этот хэндлер будет срабатывать на команду "/html"
-@dp.message(Command(commands='html'))
-async def process_html_command(message: Message):
+# Этот хэндлер будет срабатывать на команду "/bold"
+@dp.message(Command(commands='bold'))
+async def process_bold_command(message: Message):
     await message.answer(
-        text='Это текст, демонстрирующий '
-             'как работает HTML-разметка:\n\n'
-             '<b>Это жирный текст</b>\n'
-             '<i>Это наклонный текст</i>\n'
-             '<u>Это подчеркнутый текст</u>\n'
-             '<span class="tg-spoiler">А это спойлер</span>\n\n'
+        text='<b>Это текст, демонстрирующий '
+             'как работает HTML-разметка, '
+             'делающая текст жирным.\n\n'
              'Чтобы еще раз посмотреть список доступных команд - '
-             'отправь команду /help',
-        parse_mode='HTML'
+             'отправь команду /help</b>'
     )
 
 
-# Этот хэндлер будет срабатывать на команду "/markdownv2"
-@dp.message(Command(commands='markdownv2'))
-async def process_markdownv2_command(message: Message):
+# Этот хэндлер будет срабатывать на команду "/italic"
+@dp.message(Command(commands='italic'))
+async def process_italic_command(message: Message):
     await message.answer(
-        text='Это текст, демонстрирующий '
-             'как работает MarkdownV2\-разметка:\n\n'
-             '*Это жирный текст*\n'
-             '_Это наклонный текст_\n'
-             '__Это подчеркнутый текст__\n'
-             '||А это спойлер||\n\n'
-             'Чтобы еще раз посмотреть список доступных команд \- '
-             'отправь команду /help',
-        parse_mode='MarkdownV2'
-    )
-
-
-# Этот хэндлер будет срабатывать на команду "/noformat"
-@dp.message(Command(commands='noformat'))
-async def process_noformat_command(message: Message):
-    await message.answer(
-        text='Это текст, демонстрирующий '
-             'как отображается текст, если не указать '
-             'параметр parse_mode:\n\n'
-             '<b>Это мог бы быть жирный текст</b>\n'
-             '_Это мог бы быть наклонный текст_\n'
-             '<u>Это мог бы быть подчеркнутый текст</u>\n'
-             '||А это мог бы быть спойлер||\n\n'
+        text='<i>Это текст, демонстрирующий '
+             'как работает HTML-разметка, '
+             'делающая текст наклонным.\n\n'
              'Чтобы еще раз посмотреть список доступных команд - '
-             'отправь команду /help'
+             'отправь команду /help</i>'
+    )
+
+
+# Этот хэндлер будет срабатывать на команду "/underline"
+@dp.message(Command(commands='underline'))
+async def process_underline_command(message: Message):
+    await message.answer(
+        text='<u>Это текст, демонстрирующий '
+             'как работает HTML-разметка, '
+             'делающая текст подчеркнутым.\n\n'
+             'Чтобы еще раз посмотреть список доступных команд - '
+             'отправь команду /help</u>'
+    )
+
+
+# Этот хэндлер будет срабатывать на команду "/spoiler"
+@dp.message(Command(commands='spoiler'))
+async def process_spoiler_command(message: Message):
+    await message.answer(
+        text='<tg-spoiler>Это текст, демонстрирующий '
+             'как работает HTML-разметка, '
+             'убирающая текст под спойлер.\n\n'
+             'Чтобы еще раз посмотреть список доступных команд - '
+             'отправь команду /help</tg-spoiler>'
     )
 
 
