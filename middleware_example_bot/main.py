@@ -2,6 +2,7 @@ import asyncio
 import logging
 from aiogram.fsm.state import StatesGroup
 from aiogram import Bot, Dispatcher
+
 from config_data.config import Config, load_config
 from handlers.other import other_router
 from handlers.user import user_router
@@ -15,6 +16,9 @@ from middlewares.outer import (
     SecondOuterMiddleware,
     ThirdOuterMiddleware,
 )
+from middlewares.i18n import TranslatorMiddleware
+from lexicon.lexicon_en import LEXICON_EN
+from lexicon.lexicon_ru import LEXICON_RU
 
 # Настраиваем базовую конфигурацию логирования
 logging.basicConfig(
@@ -25,6 +29,12 @@ logging.basicConfig(
 
 # Инициализируем логгер модуля
 logger = logging.getLogger(__name__)
+
+translations = {
+    'default': 'ru',
+    'en': LEXICON_EN,
+    'ru': LEXICON_RU,
+}
 
 
 # Функция конфигурирования и запуска бота
@@ -48,9 +58,10 @@ async def main() -> None:
     user_router.message.middleware(FirstInnerMiddleware())
     user_router.message.middleware(SecondInnerMiddleware())
     other_router.message.middleware(ThirdInnerMiddleware())
+    dp.update.middleware(TranslatorMiddleware())
 
     # Запускаем polling
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, _translations=translations)
 
 
 asyncio.run(main())
